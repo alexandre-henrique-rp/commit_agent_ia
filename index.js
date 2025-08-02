@@ -1,8 +1,8 @@
 #!/usr/bin/env node
-require('dotenv').config()
 const { CommandGit } = require("./src/command/git.js");
 const { IaGemini } = require("./src/command/gemini.js");
 const fs = require('fs');
+const path = require('path');
 
 async function main() {
   try {
@@ -40,7 +40,8 @@ async function main() {
 
     // Gerar commit com IA
     console.log('Gerando mensagem de commit...');
-    const treinamento = fs.readFileSync('./src/trenamento/commit.md', 'utf-8');
+    const treinamentoPath = path.resolve(__dirname, 'src', 'trenamento', 'commit.md');
+    const treinamento = fs.readFileSync(treinamentoPath, 'utf-8');
     const prompt = `Com base no treinamento abaixo, crie uma mensagem de commit para as alterações do repositório:
 
 Treinamento: ${treinamento}
@@ -52,15 +53,11 @@ Status: ${status.response}`;
     const commitText = await gemini.geral(prompt);
 
     // git commit
-    console.log(`Commitando alterações:
-
-${commitText}`);
+    console.log(`Commitando alterações:\n\n${commitText}`);
     await new Promise(resolve => setTimeout(resolve, 2000));
     const commit = await git.commit(commitText);
 
-    console.log(`Commit realizado com sucesso:
-
-${commit.response}`);
+    console.log(`Commit realizado com sucesso:\n\n${commit.response}`);
     console.log(`Agora execute: git push`);
 
   } catch (error) {

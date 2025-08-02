@@ -16,8 +16,7 @@
   },
   "pkg": {
     "assets": [
-      "src/trenamento/commit.md",
-      ".env"
+      "src/trenamento/commit.md"
     ],
     "targets": [
       "node18-linux-x64",
