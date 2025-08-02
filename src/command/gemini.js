@@ -1,8 +1,8 @@
-import 'dotenv/config';
-import fs from 'fs';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+require('dotenv').config();
+const fs = require('fs');
+const { GoogleGenerativeAI } = require('@google/generative-ai');
 
-export class IaGemini {
+class IaGemini {
   constructor() {
     const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
     this.model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash-exp' });
@@ -12,7 +12,10 @@ export class IaGemini {
   #loadMarkdownFile(filePath) {
     try {
       const fileContent = fs.readFileSync(filePath, 'utf-8');
-      this.#trainingData = `\n\n--- Arquivo: ${filePath} ---\n${fileContent}`;
+      this.#trainingData = `
+
+--- Arquivo: ${filePath} ---
+${fileContent}`;
       return this;
     } catch (error) {
       console.error('Erro ao ler arquivo:', error);
@@ -25,3 +28,5 @@ export class IaGemini {
     return response.response.text();
   }
 }
+
+module.exports = { IaGemini };

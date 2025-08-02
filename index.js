@@ -1,7 +1,8 @@
 #!/usr/bin/env node
-import { CommandGit } from "./src/command/git.js";
-import { IaGemini } from "./src/command/gemini.js";
-import fs from 'fs';
+require('dotenv').config()
+const { CommandGit } = require("./src/command/git.js");
+const { IaGemini } = require("./src/command/gemini.js");
+const fs = require('fs');
 
 async function main() {
   try {
@@ -51,11 +52,15 @@ Status: ${status.response}`;
     const commitText = await gemini.geral(prompt);
 
     // git commit
-    console.log(`Commitando alterações:\n\n${commitText}`);
+    console.log(`Commitando alterações:
+
+${commitText}`);
     await new Promise(resolve => setTimeout(resolve, 2000));
     const commit = await git.commit(commitText);
 
-    console.log(`Commit realizado com sucesso:\n\n${commit.response}`);
+    console.log(`Commit realizado com sucesso:
+
+${commit.response}`);
     console.log(`Agora execute: git push`);
 
   } catch (error) {

@@ -1,6 +1,6 @@
-import { execSync } from "child_process";
+const { execSync } = require("child_process");
 
-export class CommandShell {
+class CommandShell {
   constructor(command) {
     this.#command = command;
     this.#execute();
@@ -28,3 +28,5 @@ export class CommandShell {
     return this.#error;
   }
 }
+
+module.exports = { CommandShell };

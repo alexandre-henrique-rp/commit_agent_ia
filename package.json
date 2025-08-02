@@ -4,7 +4,7 @@
   "description": "Agente de Ia que organiza, faz a listagem de arquivos e cria o commit, só não faz o push",
   "license": "MIT",
   "author": "Alexandre Henrique Da Rocha Araújo",
-  "type": "module",
+  "type": "commonjs",
   "main": "index.js",
   "bin": {
     "commit-agent": "./index.js"
@@ -12,11 +12,12 @@
   "repository": "https://github.com/kingdev/commit_agent.git",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "pkg . --out-path exe --no-bytecode"
+    "build": "pkg . --out-path dist --no-bytecode"
   },
   "pkg": {
     "assets": [
-      "src/trenamento/commit.md"
+      "src/trenamento/commit.md",
+      ".env"
     ],
     "targets": [
       "node18-linux-x64",

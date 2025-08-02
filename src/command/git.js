@@ -1,4 +1,4 @@
-import { CommandShell } from "./shell.js";
+const { CommandShell } = require("./shell.js");
 
 /**
  * Classe que representa o comando git
@@ -8,7 +8,7 @@ import { CommandShell } from "./shell.js";
  * @property {status} status - Instância do comando status
  * @property {commit} commit - Instância do comando commit
  */
-export class CommandGit {
+class CommandGit {
   constructor() { }
   /**
    * Adiciona arquivos ao staging area
@@ -63,3 +63,5 @@ export class CommandGit {
     };
   }
 }
+
+module.exports = { CommandGit };
