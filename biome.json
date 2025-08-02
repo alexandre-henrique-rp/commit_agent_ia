@@ -4,6 +4,7 @@
     "enabled": false,
     "clientKind": "git",
     "useIgnoreFile": false
+    
   },
   "files": {
     "ignoreUnknown": false,
