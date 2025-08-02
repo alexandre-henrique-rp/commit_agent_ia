@@ -86,15 +86,18 @@ commit-agent
 
 ```bash
 # 1. Crie diretório local (se não existir)
-mkdir -p ~/.local/bin
+mkdir -p ~/bin
 
 # 2. Mova o executável
-mv commit_agent-linux ~/.local/bin/commit-agent
-chmod +x ~/.local/bin/commit-agent
+mv commit_agent-linux ~/bin/commit-agent
+chmod +x ~/bin/commit-agent
 
 # 3. Adicione ao PATH (se não estiver)
-echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+echo 'export PATH="$HOME/bin:$PATH"' >> ~/.bashrc
+echo 'export PATH="$HOME/bin:$PATH"' >> ~/.zshrc #sistemas base manjaro ou arch
+
 source ~/.bashrc
+source ~/.zshrc
 
 # 4. Agora funciona globalmente
 commit-agent
