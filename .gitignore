@@ -4,3 +4,7 @@ package-lock.json
 yarn.lock
 .vscode
 dist/
+exe/win_x64
+exe/commit_agent-linux
+exe/commit_agent-macos
+
