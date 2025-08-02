@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import { CommandGit } from "./src/command/git.js";
 import { IaGemini } from "./src/command/gemini.js";
 import fs from 'fs';
