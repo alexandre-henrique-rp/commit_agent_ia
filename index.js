@@ -3,48 +3,64 @@ import { IaGemini } from "./src/command/gemini.js";
 import fs from 'fs';
 
 async function main() {
+  try {
     console.log('Iniciando o agente de IA para commit');
     const git = new CommandGit();
     const gemini = new IaGemini();
-    //identificar o local que o comando foi chamado
+
+    // Identificar o local que o comando foi chamado
     const local = process.cwd();
     console.log(`Local: ${local}`);
-    
-    const add = git.add();
-    const addStatus = gemini.geral(`verifique o retorno do git add e me retorne true ou false => ${add.response}`);
-     if(addStatus === 'false'){
-      const error = gemini.geral(`explique o erro do git add => ${add.response}`);
-      console.log(error);
+
+    // git status
+    console.log('Verificando status do git...');
+    const status = await git.status();
+
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
+    // git add . (adicionar antes de verificar staged)
+    console.log('Adicionando alterações...');
+    const add = await git.add();
+
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
+    // git diff --staged (verificar alterações após adicionar)
+    console.log('Verificando alterações no stage...');
+    const diff = await git.staged();
+
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
+    // Verificar se há alterações para commit
+    if (!diff.response || diff.response.trim() === '') {
+      console.log('Nenhuma alteração encontrada para commit.');
       return;
-     }
-     const listFiles = git.addedFiles();
-     const listFilesStatus = gemini.geral(`crie uma lita de path de arquivos com base na resposta do git addedFiles, adicionando a base do projeto, deixando como exemplo: ["local/arquivo1", "local/arquivo2"], o retorno deve ser somente o array se a lista for vazia retorne [] => listFiles:${listFiles.response}, base do projeto: ${local}`);
+    }
 
-     if (listFilesStatus === '[]') {
-      console.log('Nenhum arquivo modificado');
-      return;
-     }
-     const listFilesArray = JSON.parse(listFilesStatus);
+    // Gerar commit com IA
+    console.log('Gerando mensagem de commit...');
+    const treinamento = fs.readFileSync('./src/trenamento/commit.md', 'utf-8');
+    const prompt = `Com base no treinamento abaixo, crie uma mensagem de commit para as alterações do repositório:
 
-     const ResumeLst = []
-     listFilesArray.forEach(file => {
-      const contentFile = fs.readFileSync(file, 'utf-8');
-      if(!contentFile.trim()){
-        console.log(`Arquivo vazio: ${file}`);
-        continue;
-      }
-      const pronpt = `faça um resumo o que foi alterado nesse arquivo => ${contentFile}`
-        
+Treinamento: ${treinamento}
 
+Alterações: ${diff.response}
 
+Status: ${status.response}`;
 
+    const commitText = await gemini.geral(prompt);
 
+    // git commit
+    console.log(`Commitando alterações:\n\n${commitText}`);
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    const commit = await git.commit(commitText);
 
-     }
-      // fazer a ia ler os arquivos e me retornar o que foi modificado
-     const readFiles = gemini.geral(`leia os arquivos e me retorne o que foi modificado => ${listFilesStatus}`);
-     console.log(readFiles);
-     
+    console.log(`Commit realizado com sucesso:\n\n${commit.response}`);
+    console.log(`Agora execute: git push`);
+
+  } catch (error) {
+    console.error('Erro durante a execução:', error);
+    process.exit(1);
+  }
 }
 
 main();

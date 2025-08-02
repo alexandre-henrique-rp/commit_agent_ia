@@ -1,7 +1,19 @@
 import { CommandShell } from "./shell.js";
 
+/**
+ * Classe que representa o comando git
+ * @class
+ * @property {add} add - Instância do comando add
+ * @property {staged} staged - Instância do comando staged
+ * @property {status} status - Instância do comando status
+ * @property {commit} commit - Instância do comando commit
+ */
 export class CommandGit {
   constructor() { }
+  /**
+   * Adiciona arquivos ao staging area
+   * @returns {Object} - Objeto com a resposta e o erro
+   */
   add() {
     const shell = new CommandShell("git add .");
     return {
@@ -11,20 +23,25 @@ export class CommandGit {
     };
   }
 
-  // Lista arquivos no staging area (adicionados)
+  /**
+   * Lista arquivos no staging area (adicionados)
+   * @returns {Object} - Objeto com a resposta e o erro
+   */
   staged() {
-    const shell = new CommandShell("git diff --cached --name-only");
+    const shell = new CommandShell("git diff --staged");
     return {
       response: shell.response,
       error: shell.error,
-      files: shell.response ? shell.response.trim().split('\n').filter(f => f) : [],
       git: this
     };
   }
 
-  // Status completo (mostra tudo)
+  /**
+   * Lista o status do git
+   * @returns {Object} - Objeto com a resposta e o erro
+   */
   status() {
-    const shell = new CommandShell("git status --porcelain");
+    const shell = new CommandShell("git status");
     return {
       response: shell.response,
       error: shell.error,
@@ -32,28 +49,11 @@ export class CommandGit {
     };
   }
 
-  // Lista apenas arquivos modificados/adicionados
-  addedFiles() {
-    const shell = new CommandShell("git status --porcelain");
-    const files = [];
-
-    if (shell.response) {
-      const lines = shell.response.trim().split('\n');
-      lines.forEach(line => {
-        if (line.startsWith('A ') || line.startsWith('M ')) {
-          files.push(line.substring(3)); // Remove o prefixo "A " ou "M "
-        }
-      });
-    }
-
-    return {
-      response: shell.response,
-      error: shell.error,
-      files: files,
-      git: this
-    };
-  }
-
+  /**
+   * Comita as alterações
+   * @param {string} message - Mensagem do commit
+   * @returns {Object} - Objeto com a resposta e o erro
+   */
   commit(message) {
     const shell = new CommandShell(`git commit -m "${message}"`);
     return {

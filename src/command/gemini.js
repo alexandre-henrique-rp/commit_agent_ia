@@ -1,4 +1,5 @@
 import 'dotenv/config';
+import fs from 'fs';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 export class IaGemini {
@@ -19,8 +20,8 @@ export class IaGemini {
     }
   }
 
-  geral(prompt){
-    const response = this.model.generateContent(prompt);
+  async geral(prompt){
+    const response = await this.model.generateContent(prompt);
     return response.response.text();
   }
 }
